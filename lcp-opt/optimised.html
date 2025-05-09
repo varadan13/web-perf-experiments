@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fast LCP Example</title>
+
+    <!-- Preload hero image -->
+    <link rel="preload" href="/web-perf-experiments/lcp-opt/image.jpg" as="image" type="image/webp"
+        fetchpriority="high">
+
+    <!-- Preload critical fonts -->
+    <link rel="preload" href="fonts/roboto-v20-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+
+    <!-- Preconnect to necessary domains -->
+    <link rel="preconnect" href="https://cdn.example.com">
+
+    <!-- Inline critical CSS -->
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* Hero section (LCP element) */
+        .hero {
+            width: 100%;
+            height: 50vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+            width: 90%;
+            max-width: 800px;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+        }
+
+        /* Rest of the page styles */
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+
+        /* Add only what's needed for above-the-fold content */
+    </style>
+</head>
+
+<body>
+    <!-- Main content with optimized LCP element -->
+    <section class="hero">
+        <!-- Using webp format, properly sized, and with width/height attributes to prevent layout shifts -->
+        <img src="/web-perf-experiments/lcp-opt/image.jpg" alt="Beautiful mountain landscape" class="hero-image"
+            width="1600" height="900" fetchpriority="high" decoding="async">
+
+        <div class="hero-content">
+            <h1 class="hero-title">Lightning Fast Website</h1>
+            <p class="hero-subtitle">Optimized for incredible performance</p>
+        </div>
+    </section>
+
+    <main class="container">
+        <h2>Welcome to our high-performance site</h2>
+        <p>This page is designed to achieve excellent Core Web Vitals scores, especially for Largest Contentful Paint
+            (LCP).</p>
+
+        <!-- Additional content would load below the fold -->
+    </main>
+
+    <!-- Deferred non-critical CSS -->
+    <link rel="stylesheet" href="/web-perf-experiments/lcp-opt/non-critical.css" media="print"
+        onload="this.media='all'">
+
+    <!-- Deferred JavaScript -->
+    <script defer src="/web-perf-experiments/lcp-opt/main.js"></script>
+
+    <!-- Inline analytics script (minimal) -->
+    <script>
+        // Minimal inline script
+        document.addEventListener('DOMContentLoaded', () => {
+            // Performance measurement
+            const lcpElement = document.querySelector('.hero-image');
+            new PerformanceObserver((entryList) => {
+                const entries = entryList.getEntries();
+                const lastEntry = entries[entries.length - 1];
+                console.log('LCP:', lastEntry.startTime, 'Element:', lastEntry.element);
+            }).observe({ type: 'largest-contentful-paint', buffered: true });
+        });
+    </script>
+</body>
+
+</html>
